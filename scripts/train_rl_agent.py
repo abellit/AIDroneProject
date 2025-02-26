@@ -13,8 +13,12 @@ def train_ppo_cnn():
 
     manager = TrainingManager()
     config = manager.config
-
-    env = AirSimForestEnv(config=config)
+    
+    # Get AirSim client through the manager
+    client = manager.setup_airsim_client() if manager.is_colab else None
+    
+    # Pass the client to the environment
+    env = AirSimForestEnv(config=config, client=client)
 
     model = PPO(ActorCriticCnnPolicy, env,
         batch_size=config['training']['batch_size'],

@@ -16,10 +16,17 @@ class AirSimForestEnv(gym.Env):
     """
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 60} # Example metadata
 
-    def __init__(self, ip_address=''):
+    def __init__(self, ip_address='', config=None, client=None):
         super().__init__()
-        # AirSim client
-        self.client = airsim.MultirotorClient(ip=ip_address) if ip_address else airsim.MultirotorClient()
+        self.config = config or {}
+
+        if client:
+            self.client = client
+        else:
+            # Original connection code
+            ip_address = self.config.get('airsim_ip', '')
+            self.client = airsim.MultirotorClient(ip=ip_address) if ip_address else airsim.MultirotorClient()
+    
         self.client.confirmConnection()
         self.client.enableApiControl(True)
         self.client.armDisarm(True)
@@ -52,7 +59,7 @@ class AirSimForestEnv(gym.Env):
         # Execute action in AirSim
         self.client.moveByRollPitchYawZAsync(roll, pitch, yaw_rate, -3, throttle, 0.1).join() # Example duration 0.1 sec
         # Wait for a small simulation step (important for SteppableClock)
-        time.sleep(0.02) # Adjust sleep time as needed, smaller values for faster simulation
+        time.sleep(0.05) # Adjust sleep time as needed, smaller values for faster simulation
 
         # Get next observation (image)
         image_np = self._get_observation()
@@ -91,14 +98,22 @@ class AirSimForestEnv(gym.Env):
         """
         Get image observation from AirSim and preprocess it.
         """
-        responses = self.client.simGetImages([airsim.ImageRequest(self.camera_name, self.image_type, pixels_as_float=False, compress=False)])
-        response = responses[0]
-        img_np = np.frombuffer(response.image_data_uint8, dtype=np.uint8)
-        img_np = img_np.reshape(response.height, response.width, 3) # Assuming RGB
-        gray_image = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY) # Convert to grayscale
-        resized_image = cv2.resize(gray_image, (64, 64)) # Resize for CNN input
-        normalized_image = resized_image / 255.0 # Normalize to 0-1
-        return normalized_image.astype(np.float32).reshape(64, 64, 1) # Reshape to (64, 64, 1) for CNN input
+
+        try:
+            responses = self.client.simGetImages([airsim.ImageRequest(self.camera_name, self.image_type, pixels_as_float=False, compress=False)])
+            response = responses[0]
+            img_np = np.frombuffer(response.image_data_uint8, dtype=np.uint8)
+            img_np = img_np.reshape(response.height, response.width, 3) # Assuming RGB
+            gray_image = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY) # Convert to grayscale
+            resized_image = cv2.resize(gray_image, (64, 64)) # Resize for CNN input
+            normalized_image = resized_image / 255.0 # Normalize to 0-1
+            return normalized_image.astype(np.float32).reshape(64, 64, 1) # Reshape to (64, 64, 1) for CNN input
+        except Exception as e:
+            print(f"Error getting observation: {e}")
+            # Return a blank observation as fallback
+            return np.zeros((64, 64, 1), dtype=np.float32)
+        
+        
 
     def _calculate_reward(self):
         """

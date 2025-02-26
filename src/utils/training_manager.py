@@ -12,7 +12,21 @@ class TrainingManager:
         self.is_colab = self._check_colab()
         self.config = self._load_config()
         self.experiment_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        
+
+
+    def setup_airsim_client(self):
+        """Create and return the appropriate AirSim client based on environment"""
+        if self.is_colab:
+            # In Colab, we need special handling for AirSim
+            import airsim
+            # You might need to specify IP if running AirSim remotely
+            client = airsim.MultirotorClient(ip=self.config.get('airsim_ip', ''))
+            return client
+        else:
+            # Local environment - normal connection
+            import airsim
+            return airsim.MultirotorClient()
+
     def _check_colab(self):
         """Detect if we're running in Colab environment."""
         try:
