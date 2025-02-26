@@ -1,0 +1,9 @@
+# docker/Dockerfile.train
+FROM drone-nav-base:latest
+
+# Copy only necessary files for training
+COPY src /app/src
+COPY scripts /app/scripts
+
+# Set default command to run training
+CMD ["python3", "scripts/train_rl_agent.py"]

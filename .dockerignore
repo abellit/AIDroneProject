@@ -1,0 +1,11 @@
+env/
+**/__pycache__
+*.pyc
+.git
+.gitignore
+.env
+data/flight_logs/*
+data/training_data/*
+!data/training_data/.gitkeep
+data/model_weights/*
+!data/model_weights/.gitkeep
