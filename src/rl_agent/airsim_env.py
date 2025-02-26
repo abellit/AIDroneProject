@@ -26,7 +26,7 @@ class AirSimForestEnv(gym.Env):
             # Original connection code
             ip_address = self.config.get('airsim_ip', '')
             self.client = airsim.MultirotorClient(ip=ip_address) if ip_address else airsim.MultirotorClient()
-    
+
         self.client.confirmConnection()
         self.client.enableApiControl(True)
         self.client.armDisarm(True)
@@ -59,7 +59,9 @@ class AirSimForestEnv(gym.Env):
         # Execute action in AirSim
         self.client.moveByRollPitchYawZAsync(roll, pitch, yaw_rate, -3, throttle, 0.1).join() # Example duration 0.1 sec
         # Wait for a small simulation step (important for SteppableClock)
+
         time.sleep(0.05) # Adjust sleep time as needed, smaller values for faster simulation
+
 
         # Get next observation (image)
         image_np = self._get_observation()
@@ -112,8 +114,6 @@ class AirSimForestEnv(gym.Env):
             print(f"Error getting observation: {e}")
             # Return a blank observation as fallback
             return np.zeros((64, 64, 1), dtype=np.float32)
-        
-        
 
     def _calculate_reward(self):
         """
