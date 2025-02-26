@@ -1,0 +1,15 @@
+# docker/Dockerfile.dev
+FROM drone-nav-base:latest
+
+# Install development tools
+RUN pip install --no-cache-dir \
+    pytest \
+    pytest-cov \
+    ipython \
+    jupyter
+
+# Copy the entire project
+COPY . /app/
+
+# Set default command
+CMD ["bash"]

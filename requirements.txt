@@ -1,0 +1,16 @@
+numpy
+pandas
+msgpack-rpc-python
+tensorflow
+opencv-python
+matplotlib
+stable-baselines3
+shapely
+scikit-learn
+imageio
+pyyaml
+gymnasium
+wandb
+pytest
+tensorboard
+airsim

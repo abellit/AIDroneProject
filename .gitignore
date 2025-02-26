@@ -1,0 +1,50 @@
+# Python virtual environment
+env/
+venv/
+ENV/
+
+# Python cached files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Training artifacts
+data/flight_logs/*
+!data/flight_logs/.gitkeep
+data/training_data/*
+!data/training_data/.gitkeep
+data/model_weights/*
+!data/model_weights/.gitkeep
+
+# Colab temporary files
+colab_upload_*/
+*.zip
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker/
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Environment variables
+.env
