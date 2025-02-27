@@ -4,7 +4,7 @@ msgpack-rpc-python
 tensorflow
 opencv-python
 matplotlib
-stable-baselines3
+stable-baselines3[extra]
 shapely
 scikit-learn
 imageio
@@ -13,4 +13,3 @@ gymnasium
 wandb
 pytest
 tensorboard
-airsim
