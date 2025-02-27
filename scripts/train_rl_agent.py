@@ -38,7 +38,7 @@ def train_ppo_cnn():
     
     max_episodes = config['training']['max_episodes']
     for episode in range(start_episode + 1, max_episodes + 1):
-        print(f"Starting episode {episode}/{max_episdode}")
+        print(f"Starting episode {episode}/{max_episodes}")
         model.learn(total_timesteps=10000, reset_num_timesteps=False)
         metrics = {'episode_reward_mean': 0}
         manager.save_checkpoint(model.policy, metrics, episode)

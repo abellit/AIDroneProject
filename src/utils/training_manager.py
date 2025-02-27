@@ -9,6 +9,7 @@ class TrainingManager:
     Handles configuration, model checkpointing, and environment detection.
     """
     def __init__(self):
+        print("TrainingManager initialized - UPDATED VERSION")
         self.is_colab = self._check_colab()
         self.config = self._load_config()
         self.experiment_id = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -36,11 +37,28 @@ class TrainingManager:
             return False
     
     def _load_config(self):
+        # """Load appropriate configuration based on environment."""
+        # config_path = '../../configs/colab_config.json' if self.is_colab else '../../configs/local_config.json'
+        
+        # # Debugging: Print working directory
+        # print("Current working directory:", os.getcwd())
+        
+        # if not os.path.exists(config_path):
+        #     raise FileNotFoundError(f"Config file not found: {config_path}")
+        
+        # with open(config_path, 'r') as f:
+        #     return json.load(f)
         """Load appropriate configuration based on environment."""
-        config_path = 'configs/colab_config.json' if self.is_colab else 'configs/local_config.json'
+        # Since we know the Docker container structure, use absolute paths
+        config_filename = 'cloud_config.json' if self.is_colab else 'local_config.json'
+        config_path = f'/app/configs/{config_filename}'
+        
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"Config file not found: {config_path}")
+        
         with open(config_path, 'r') as f:
             return json.load(f)
-    
+
     def get_model_path(self):
         """Get the appropriate path for saving/loading models."""
         base_path = self.config['paths']['model_weights']
