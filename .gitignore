@@ -47,4 +47,4 @@ temp/
 .ipynb_checkpoints/
 
 # Environment variables
-.env
+.envmodel/*.h5

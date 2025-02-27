@@ -13,8 +13,7 @@ def train_ppo_cnn():
 
     manager = TrainingManager()
     config = manager.config
-    
-    # Get AirSim client through the manager
+_    # Get AirSim client through the manager
     client = manager.setup_airsim_client() if manager.is_colab else None
     
     # Pass the client to the environment
